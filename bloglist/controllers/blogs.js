@@ -5,8 +5,8 @@ blogsRouter.get('/', (request, response) => {
   Blog
     .find({})
     .then(blogs => {
-    response.json(blogs)
-  })
+      response.json(blogs)
+    })
 })
 
 blogsRouter.get('/:id', (request, response, next) => {
@@ -41,8 +41,8 @@ blogsRouter.delete('/:id', (request, response, next) => {
 })
 
 blogsRouter.put('/:id', (request, response, next) => {
-  const blog = {...request.body}
-  
+  const blog = { ...request.body }
+
   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     .then(updatedBlog => {
       response.json(updatedBlog)
