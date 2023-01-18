@@ -23,8 +23,62 @@ const favoriteBlog = (blogs) => {
   return favorite
 }
 
+const mostBlogs = (blogs) => {
+  const bloggers = []
+
+  blogs.forEach(blog => {
+    const index = bloggers.findIndex(blogger => blogger.author === blog.author)
+
+    if (index > -1) {
+      bloggers[index].blogs += 1
+    } else {
+      bloggers.push({ author: blog.author, blogs: 1 })
+    }
+  })
+
+  let topBlogger = {}
+
+  bloggers.forEach(blogger => {
+    if (!topBlogger.blogs) topBlogger.blogs = 0
+
+    if (blogger.blogs > topBlogger.blogs) {
+      topBlogger = { ...blogger }
+    }
+  })
+
+  return topBlogger
+}
+
+const mostLikes = (blogs) => {
+  const bloggers = []
+
+  blogs.forEach(blog => {
+    const index = bloggers.findIndex(blogger => blogger.author === blog.author)
+
+    if (index > -1) {
+      bloggers[index].likes += blog.likes
+    } else {
+      bloggers.push({ author: blog.author, likes: blog.likes })
+    }
+  })
+
+  let topBlogger = {}
+
+  bloggers.forEach(blogger => {
+    if (!topBlogger.likes) topBlogger.likes = 0
+
+    if (blogger.likes > topBlogger.likes) {
+      topBlogger = { ...blogger }
+    }
+  })
+
+  return topBlogger
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs,
+  mostLikes
 }
