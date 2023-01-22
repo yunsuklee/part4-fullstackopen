@@ -123,7 +123,20 @@ describe('manipulating already existing blog posts', () => {
 
   // Test for updating a blog post
   test('updating blog post information', async () => {
+    const blogsBeforeUpdate = await helper.blogsInDb()
+    const blogToUpdate = blogsBeforeUpdate[0]
 
+    const updatedBlog = {
+      likes: 10000
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate[0].likes).toBe(10000)
   })
 })
 
