@@ -42,6 +42,27 @@ test('verifying existence of property id', async () => {
   response.body.forEach(blog => expect(blog.id).toBeDefined())
 })
 
+// Test creating a new blog
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Adding test blog',
+    author: 'FullStackOpen',
+    url: 'https://fullstackopen.com',
+    likes: 500
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAfterAdding = await helper.blogsInDb()
+  expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length + 1)
+
+  const titles = blogsAfterAdding.map(b => b.title)
+  expect(titles).toContain('Adding test blog')
+})
 
 afterAll(() => {
   mongoose.connection.close()
