@@ -84,6 +84,34 @@ test('if likes is missing it will default to 0', async () => {
   expect(blogsAfterAdding.at(-1).likes).toBe(0)
 })
 
+// Test bad request
+test('missing url or title', async () => {
+  const noTitleBlog = {
+    author: 'Sergio Lee',
+    url: 'www.google.com',
+    likes: 1
+  }
+
+  const noUrlBlog = {
+    title: 'No url Blog',
+    author: 'Sergio Lee',
+    likes: 10
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noTitleBlog)
+    .expect(400)
+
+  await api
+    .post('/api/blogs')
+    .send(noUrlBlog)
+    .expect(400)
+
+  const blogsAfterAdding = await helper.blogsInDb()
+  expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

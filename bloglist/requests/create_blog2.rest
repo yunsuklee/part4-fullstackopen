@@ -2,8 +2,7 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Blog test 2",
+  "title": "Blog test 3",
   "author": "Sergio Lee",
-  "url": "https://linkedin.com/in/yunsuklee",
   "likes": 500
 }
