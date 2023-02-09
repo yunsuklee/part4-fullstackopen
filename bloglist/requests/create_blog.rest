@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Blog test",
-  "author": "Sergio Lee",
-  "url": "https://github.com/yunsuklee",
-  "likes": 1200
+  "title": "Google",
+  "author": "sergio",
+  "url": "https://www.google.com/",
+  "userId": "63e4dfd25e8af63c5a612975"
 }

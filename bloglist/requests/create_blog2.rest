@@ -2,7 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Blog test 3",
-  "author": "Sergio Lee",
-  "likes": 500
+  "title": "Youtube",
+  "author": "root",
+  "url": "https://www.youtube.com/",
+  "userId": "63e23731d6512cec43a93dd8"
 }
