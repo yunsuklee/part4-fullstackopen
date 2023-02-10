@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlcmdpbyIsImlkIjoiNjNlNGRmZDI1ZThhZjYzYzVhNjEyOTc1IiwiaWF0IjoxNjc2MDIyMjk4fQ.anNjm6H7z73JjN_9_1CIuI0GJQx-YOKkZ1e2EYMAQ4A
+
+{
+  "title": "GitHub",
+  "author": "sergio",
+  "url": "https://www.github.com/yunsuklee",
+  "userId": "63e4dfd25e8af63c5a612975"
+}
