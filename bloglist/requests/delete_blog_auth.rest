@@ -4,6 +4,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlc
 
 ### Unathourized
 
-DELETE http://localhost:3001/api/blogs/63e616d49653b5e374d52ba8
+DELETE http://localhost:3001/api/blogs/63e62938915e6047661ab1be
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzZTIzNzMxZDY1MTJjZWM0M2E5M2RkOCIsImlhdCI6MTY3NjAyNjE1OX0.2oOPnfhBOfbkH9Fpyjpb_slCW12gDAt-5Sx1Dg9SPrw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzZTIzNzMxZDY1MTJjZWM0M2E5M2RkOCIsImlhdCI6MTY3NjAyODA1MX0.wTqxdpv2ie_PNMIa3qCtRgeyjGN13zNgrbeEk9TY96o

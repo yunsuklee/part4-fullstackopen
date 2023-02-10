@@ -22,3 +22,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlc
   "url": "https://www.freecodecamp.org",
   "userId": "63e4dfd25e8af63c5a612975"
 }
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzZTIzNzMxZDY1MTJjZWM0M2E5M2RkOCIsImlhdCI6MTY3NjAyODA1MX0.wTqxdpv2ie_PNMIa3qCtRgeyjGN13zNgrbeEk9TY96o
+
+{
+  "title": "FullStackOpen",
+  "author": "root",
+  "url": "https://www.fullstackopen.com",
+  "userId": "63e23731d6512cec43a93dd8"
+}
