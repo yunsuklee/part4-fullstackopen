@@ -6,6 +6,16 @@ Content-Type: application/json
   "password": "sergio"
 }
 
+###
+
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "root"
+}
+
 ### Wrong username
 
 POST http://localhost:3001/api/login
