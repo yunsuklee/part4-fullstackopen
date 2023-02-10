@@ -1,14 +1,22 @@
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
+const bcrypt = require('bcrypt')
 const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('root', 10)
+  const user = new User({ username: 'root', passwordHash })
+
+  await user.save()
 })
 
 describe('when there are some initial blog posts saved', () => {
@@ -39,14 +47,20 @@ describe('when adding new blog posts', () => {
   // Test creating a new blog
   test('a valid blog can be added', async () => {
     const newBlog = {
-      title: 'Adding test blog',
-      author: 'FullStackOpen',
-      url: 'https://fullstackopen.com',
-      likes: 500
+      title: 'Adding blog test',
+      author: 'test',
+      url: '#',
     }
+
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'root' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + response.body.token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -55,7 +69,7 @@ describe('when adding new blog posts', () => {
     expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length + 1)
 
     const titles = blogsAfterAdding.map(b => b.title)
-    expect(titles).toContain('Adding test blog')
+    expect(titles).toContain('Adding blog test')
   })
 
   // Test missing likes property
@@ -63,11 +77,18 @@ describe('when adding new blog posts', () => {
     const newBlog = {
       title: 'No likes blog',
       author: 'Sergio Lee',
-      url: 'https://twitter.com'
+      url: '#',
     }
+
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'root' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + response.body.token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -80,6 +101,12 @@ describe('when adding new blog posts', () => {
 
   // Test bad request
   test('missing url or title', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'root' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
     const noTitleBlog = {
       author: 'Sergio Lee',
       url: 'www.google.com',
@@ -94,13 +121,38 @@ describe('when adding new blog posts', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + response.body.token)
       .send(noTitleBlog)
       .expect(400)
 
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + response.body.token)
       .send(noUrlBlog)
       .expect(400)
+
+    const blogsAfterAdding = await helper.blogsInDb()
+    expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
+  })
+
+  // Test adding blog without token
+  test('adding a blog fails if a token is not provided', async () => {
+    const newBlog = {
+      title: 'Adding blog test',
+      author: 'test',
+      url: '#',
+    }
+
+    await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'root' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
 
     const blogsAfterAdding = await helper.blogsInDb()
     expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
@@ -110,15 +162,41 @@ describe('when adding new blog posts', () => {
 describe('manipulating already existing blog posts', () => {
   // Test for deleting a single blog post
   test('deleting a single blog post', async () => {
-    const blogsBeforeDeletion = await helper.blogsInDb()
-    const blogToDelete = blogsBeforeDeletion[0]
+    await Blog.deleteMany({}) // Delete all blogs
 
-    await api
+    const response = await api // login user
+      .post('/api/login')
+      .send({ username: 'root', password: 'root' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const { username } = response.body
+    const user = await User.findOne({ username }) // get user
+
+    const newBlog = { // add a blog to delete
+      title: 'Adding blog test',
+      author: 'test',
+      url: '#',
+      user: user
+    }
+
+    await api // add blog
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + response.body.token)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsBeforeDeletion = await helper.blogsInDb()
+    const blogToDelete = blogsBeforeDeletion[0] // retrieve id of only blog in db
+
+    await api // delete blog
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', 'Bearer ' + response.body.token)
       .expect(204)
 
     const blogsAfterDeletion = await helper.blogsInDb()
-    expect(blogsAfterDeletion).toHaveLength(helper.initialBlogs.length - 1)
+    expect(blogsAfterDeletion).toHaveLength(blogsBeforeDeletion.length - 1)
   })
 
   // Test for updating a blog post
